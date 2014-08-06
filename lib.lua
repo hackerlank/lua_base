@@ -1,3 +1,7 @@
+-- local modname = ...
+-- local Lib = {}
+-- _G[modname] = Lib
+-- 以上这样写，这个模块的名字就取决于该文件名
 local Lib = Lib or {};
 
 function Lib:SplitStr(szStrConcat, szSep)
@@ -101,3 +105,9 @@ function Lib:ShowTB(tbVar, szBlank, nCount)
 	_ShowTBDetail(tbVar or {}, szBlank, nCount);
 end
 
+-- 这个 return 也可以这样省略
+-- package.loaded[modname] = Lib
+-- package.loaded 即是 require 使用到的模块数组
+-- modname 是文件头中注释赋值，即是 ...
+-- 但以上写法依赖 require 的实现，虽然 return 也是，但写 return 应该是 require 的本意
+return Lib;

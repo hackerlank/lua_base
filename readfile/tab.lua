@@ -1,3 +1,5 @@
+require("Lib");
+
 local TabFile = TabFile or {};
 
 -- 定义块结构的大小，具体需要再看
@@ -29,3 +31,5 @@ end
 function TabFile:StringTab(szStrConcat)
 	return Lib:SplitStr(szStrConcat, "\t");
 end
+
+return TabFile;

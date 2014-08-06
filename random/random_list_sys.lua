@@ -67,3 +67,4 @@ function RandomListSys:_GetRandomValueToReward(nRandomValue, nListId)
 	return nil;
 end
 
+return RandomListSys;
