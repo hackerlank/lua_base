@@ -1,3 +1,5 @@
+require("readfile.tab");
+
 local RandomListSys = RandomListSys or {};
 
 function RandomListSys:Init()
@@ -11,9 +13,8 @@ function RandomListSys:Init()
 	self.tbMustList = {};
 	self.tbRandomListMaxProbability = {};
 
-	-- local szRandomBoxListFile 	= "\\setting\\game\\random_list_award.txt";
-	local szRandomBoxListFile = "random_list_award.txt";
-	local tbData				= Lib:LoadTabFile(szRandomBoxListFile, tbNumColName);
+	local szRandomBoxListFile = "\\random\\random_list_award.txt";
+	local tbData				= TabFile:ReadFile(szRandomBoxListFile, tbNumColName);
 
 	for _, tbRandom in ipairs(tbData) do
 		local nRandomListId = tbRandom.nRandomListId;
@@ -66,5 +67,7 @@ function RandomListSys:_GetRandomValueToReward(nRandomValue, nListId)
 
 	return nil;
 end
+
+RandomListSys:Init();
 
 return RandomListSys;

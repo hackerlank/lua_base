@@ -3,6 +3,7 @@
 -- _G[modname] = Lib
 -- 以上这样写，这个模块的名字就取决于该文件名
 local Lib = Lib or {};
+_G["Lib"] = Lib;
 
 function Lib:SplitStr(szStrConcat, szSep)
 	szSep	= szSep or ",";

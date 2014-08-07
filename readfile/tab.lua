@@ -1,6 +1,7 @@
 require("Lib");
 
 local TabFile = TabFile or {};
+_G["TabFile"] = TabFile;
 
 -- 定义块结构的大小，具体需要再看
 local BUFSIZE = 2^13;
