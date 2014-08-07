@@ -8,11 +8,12 @@ local BUFSIZE = 2^13;
 
 -- 不区分路径
 function TabFile:ReadFile(filename)
-	local f = io.input(filename);
+	local f = io.open(filename);
 	local tbTabList = {};
 	
 	while true do
-		local line, rest = f:read(BUFSIZE, "*line");	-- read 函数
+		-- local line, rest = f:read(BUFSIZE, "*line");	-- read 函数:这样的 read 会一直读取文件读满
+		local line, rest = f:read("*line");	-- read 函数
 		if not line then 
 			break 
 		end
@@ -21,11 +22,13 @@ function TabFile:ReadFile(filename)
 			line = line..rest.."\n"
 		end
 
+		print(line);
 		local szList = self:StringTab(line);
+		Lib:ShowTB(szList);
 		table.insert(tbTabList, szList);
 	end
 
-	Lib:ShowTB(tbTabList);
+	-- Lib:ShowTB(tbTabList);
 	return tbTabList;
 end
 
