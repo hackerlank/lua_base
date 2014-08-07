@@ -13,7 +13,7 @@ function RandomListSys:Init()
 	self.tbMustList = {};
 	self.tbRandomListMaxProbability = {};
 
-	local szRandomBoxListFile = "\\random\\random_list_award.txt";
+	local szRandomBoxListFile = ".\\random\\random_list_award.txt";
 	local tbData				= TabFile:ReadFile(szRandomBoxListFile, tbNumColName);
 
 	for _, tbRandom in ipairs(tbData) do
