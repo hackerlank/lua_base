@@ -106,6 +106,21 @@ function Lib:ShowTB(tbVar, szBlank, nCount)
 	_ShowTBDetail(tbVar or {}, szBlank, nCount);
 end
 
+function Lib:GetLocalOSPath(szClientPath)
+	local szOSName = os.getenv("OS");
+	local szRet = "";
+	if string.find(szOSName, "Window") or string.find(szOSName, "window") then
+		-- 有 windows，则转 / 为 \\
+		szRet = string.gsub(szClientPath, "/", "\\");
+	else
+		szRet = string.gsub(szClientPath, "\\", "/");
+	end
+
+	print(szClientPath, szRet);
+
+	return szRet;
+end
+
 -- 这个 return 也可以这样省略
 -- package.loaded[modname] = Lib
 -- package.loaded 即是 require 使用到的模块数组

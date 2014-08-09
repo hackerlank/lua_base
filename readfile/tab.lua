@@ -14,6 +14,7 @@ local BUFSIZE = 2^13;
 -- local tbResult = TabFile:ReadFile("./path/filename", tbTag);
 -- assert(type(tbResult["NumberListName"]) == "number")
 function TabFile:ReadFile(filename, tbHeaderNumberTag)
+	filename = Lib:GetLocalOSPath(filename);
 	local f = io.open(filename);
 	local tbTabList = {};
 
