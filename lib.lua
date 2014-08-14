@@ -36,7 +36,7 @@ function Lib:TypeId(szType)
 end;
 
 -- 修正出现死循环
-function Lib:ShowTB(tbVar, szBlank, nCount)
+function Lib:ShowTB(tbVar, nCount)
 	-- 已经访问过的table表
 	local tbVisitTable = {};
 	
@@ -44,6 +44,7 @@ function Lib:ShowTB(tbVar, szBlank, nCount)
 		if (not szBlank) then
 			szBlank = "";
 		end;
+
 		nCount = nCount or 0;
 		if nCount > 10000 then
 			print("ERROE~~ 层数太多，超过了1万次，防止死循环！！！！");
@@ -103,7 +104,7 @@ function Lib:ShowTB(tbVar, szBlank, nCount)
 		end
 	end
 	
-	_ShowTBDetail(tbVar or {}, szBlank, nCount);
+	_ShowTBDetail(tbVar or {}, nil, nCount);
 end
 
 function Lib:GetLocalOSPath(szClientPath)

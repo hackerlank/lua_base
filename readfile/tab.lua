@@ -40,6 +40,7 @@ function TabFile:ReadFile(filename, tbHeaderNumberTag)
 
 		local szList = self:StringTab(line);
 		local tbLineData = {}
+		-- 根据 tbHeader 完成 tab 表的填充
 		for i = 1, #tbHeader do
 			local tbName = tbHeader[i];
 			if tbHeaderNumberTag and tbHeaderNumberTag[tbName] == 1 then
