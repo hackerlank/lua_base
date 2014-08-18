@@ -1,26 +1,23 @@
 require("Lib");
 
-local XmlFile = TabFile or {};
+local XmlFile = XmlFile or {};
 _G["Xml"] = XmlFile;
 
--- 定义块结构的大小，具体需要再看
-local BUFSIZE = 2^13;
-
 function XmlFile:ReadFile(filename, tbHeaderNumberTag)
+	-- 读取完文件
+	filename = Lib:GetLocalOSPath(filename);
 	local f = io.open(filename);
-	local tbTabList = {};
 
-	-- 读取第一行
-	local line = f:read("*line");
-	local tbHeader = self:StringTab(line)
-	
-	while true do
-		-- local line, rest = f:read(BUFSIZE, "*line");	-- read 函数:这样的 read 会一直读取文件读满直到 line 满足 BUFSIZE 的块
-		-- if not line then 
-		-- 	break 
-		-- end
+	self.AllString = f:read("*all");
+	self.nPos = 1;
+	self.nEndPos = string.len(self.AllString);
+end
 
-		-- if rest then
-		-- 	line = line..rest.."\n"
-		-- end
+function XmlFile:CreateFile()
+
+end
+
+function XmlFile:CreateANode()
+
+end
 
