@@ -122,6 +122,7 @@ function Lib:GetLocalOSPath(szClientPath)
 	return szRet;
 end
 
+-- 在文件头中 _G() 已经可以让 return 省略掉了，但它写入了 _G 空间
 -- 这个 return 也可以这样省略
 -- package.loaded[modname] = Lib
 -- package.loaded 即是 require 使用到的模块数组
