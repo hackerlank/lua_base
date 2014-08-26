@@ -7,6 +7,12 @@
 	* 将 szSet 依据分隔符 szStrConcat 变换成返回值 table
 * Lib:ShowTB(tbVar, nCount)
 	* 打印出 tbVar 的内容，tbVar 的类型必须是 table
+* Lib:Copy(tbData)
+	* 深度 copy tbData （实现的思路见代码）
+* Lib:NewClass(tbBase, …)
+	* 一种实现继承的方式
+	* 子类会被包含在 _tbBase 中
+	* 子类生成时会调用父类的 Init，然后再调用自己的 Init
 
 
 ###readfile

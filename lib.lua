@@ -185,13 +185,13 @@ function Lib:NewClass(tbBaseClass, ...)
 	local tbRoot = tbNew;
 	local tbInit = {};
 	repeat
-		tbRoot = rawget(tbRoot, "_tbBase")
 		local fnInit = rawget(tbRoot, "Init")
 		-- 找到子类中存在的 Init 函数
 		if (type(fnInit) == "function") then
 			table.insert(tbInit, fnInit, 1)
 		end
-	until(not rawget(tbRoot, "_tbBase"));
+		tbRoot = rawget(tbRoot, "_tbBase")
+	until(tbRoot == nil)
 
 	for _, fnInit in ipairs(tbInit) do
 		fnInit(tbNew, ...);
@@ -200,11 +200,33 @@ function Lib:NewClass(tbBaseClass, ...)
 	return tbNew
 end
 
-
 -- 在文件头中 _G() 已经可以让 return 省略掉了，但它写入了 _G 空间
 -- 这个 return 也可以这样省略
 -- package.loaded[modname] = Lib
 -- package.loaded 即是 require 使用到的模块数组
 -- modname 是文件头中注释赋值，即是 ...
 -- 但以上写法依赖 require 的实现，虽然 return 也是因为 require 的实现，但写 return 应该是 require 的本意
+-- require 抽象实现见下
+--[[
+
+function require (name)
+	if not package.loaded[name] then
+		-- 通过 findloader 获得加载器，这里抽象成一个函数，它会依次去 package.proload[]、Lua file、C++ Lib 中去找
+		-- 如果是 lua file，那么这个 loader() 就是 loadfile()
+		local loader = findloader(name)
+		if loader == nil then
+			error("unable to load module ".. name)
+		end
+
+		package.loaded[name] = true		-- 找到则先加上标记，以免后面的 loader 中产生循环
+		local res = loader(name)
+		if res ~= nil then
+			package.loaded[name] = res
+		end
+	end
+
+	return package.loaded[name]
+end
+
+--]]
 return Lib;
