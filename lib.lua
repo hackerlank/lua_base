@@ -122,6 +122,39 @@ function Lib:GetLocalOSPath(szClientPath)
 	return szRet;
 end
 
+-- 推导它的过程
+-- 0、使用递归
+-- 1、除了 table，其他都可以直接复制，table 需要 for
+-- 2、key 值同样可能是一个 table，所以需要 _copy
+-- 3、一个表中可能有指向相同内存块的两个结构，所以这个关系也需要被保留，这是 tbLookup 的由来
+-- 4、matetable 是容易忽视的一个点
+function Lib:Copy(tbData)
+	local tbLookup = {};
+
+	local function _copy(tbObj)
+		-- type will back value:nil boolean number string function userdate thread and table
+		-- only table need do the deep clone
+		if type(tbObj) ~= "table" then
+			return tbObj;
+		elseif tbLookup[tbObj] then
+            -- if meet this object before, just return old value
+			return tbLookup[tbObj];
+		end
+
+		local tbNewObj = {};
+		tbLookUp[tbObj] = tbNewObj;
+		for key, value in pairs(tbObj) do
+            -- not only the value maybe a table, the key also maybe a table
+			tbNewObj[_copy(key)] = _copy(value);
+		end
+
+        -- table and userdate both have metatable, but userdate can not do deep clone(maybe you should not do this for it), so...
+		return setmetatable(tbNewObj, getmetatable(tbObj));
+	end
+
+	return _copy(tbData);
+end
+
 -- 这个 return 也可以这样省略
 -- package.loaded[modname] = Lib
 -- package.loaded 即是 require 使用到的模块数组
