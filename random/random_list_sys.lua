@@ -1,6 +1,7 @@
 require("readfile.tab");
 
 local RandomListSys = RandomListSys or {};
+_G["RandomListSys"] = RandomListSys;
 
 function RandomListSys:Init()
 	local tbNumColName	= {
