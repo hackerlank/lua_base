@@ -155,6 +155,51 @@ function Lib:Copy(tbData)
 	return _copy(tbData);
 end
 
+------------------------------------------------
+-- 以下是一种生成继承内的方法:
+-- 1、父类在子类的 _tbBase 中
+-- 2、NewClass 中子类会调用父类的 Init
+
+-- 子类的__index 元方法，去 _tbBase 中查找
+Lib._tbCommonMetatable = {
+	__index = function (tb, key)
+		-- 这样写不牵扯到 _tbBase 中的方法，是否这样孙子类无法访问父类？
+		-- return rawget(tb, "_tbBase")[key];
+
+		local tbRoot = tb;
+		local tbRet = nil;
+		repeat
+			tbRet = rawget(tbRoot, "_tbBase")[key];
+			tbRoot = rawget(tbRoot, "_tbBase");
+		until(tbRet ~= nil or tbRoot == nil)
+
+		return tbRet;
+	end;
+}
+
+function Lib:NewClass(tbBaseClass, ...)
+	local tbNew = {_tbBase = Lib:Copy(tbBaseClass)};
+	setmetatable(tbNew, self._tbCommonMetatable);
+
+	-- 处理 Init 函数
+	local tbRoot = tbNew;
+	local tbInit = {};
+	repeat
+		tbRoot = rawget(tbRoot, "_tbBase")
+		local fnInit = rawget(tbRoot, "Init")
+		-- 找到子类中存在的 Init 函数
+		if (type(fnInit) == "function") then
+			table.insert(tbInit, fnInit, 1)
+		end
+	until(not rawget(tbRoot, "_tbBase"));
+
+	for _, fnInit in ipairs(tbInit) do
+		fnInit(tbNew, ...);
+	end
+
+	return tbNew
+end
+
 -- 这个 return 也可以这样省略
 -- package.loaded[modname] = Lib
 -- package.loaded 即是 require 使用到的模块数组
