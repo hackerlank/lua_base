@@ -5,6 +5,29 @@
 local Lib = Lib or {};
 _G["Lib"] = Lib;
 
+function Lib:TableEqual(value1, value2)
+	local szType1 = type(value1);
+	local szType2 = type(value2);
+
+	if szType1 ~= szType2 then
+		return false
+	end
+
+	if szType1 ~= "table" then
+		if value1 ~= value2 then
+			return false;
+		end
+	else
+		for key, value in pairs(value1) do
+			if value2[key] == nil or self:TableEqual(value2[key], value) == false then
+				return false;
+			end
+		end
+	end
+
+	return true;
+end
+
 function Lib:SplitStr(szStrConcat, szSep)
 	szSep	= szSep or ",";
 	
@@ -199,6 +222,8 @@ function Lib:NewClass(tbBaseClass, ...)
 
 	return tbNew
 end
+
+-- Lua 书本上的
 
 -- 在文件头中 _G() 已经可以让 return 省略掉了，但它写入了 _G 空间
 -- 这个 return 也可以这样省略
