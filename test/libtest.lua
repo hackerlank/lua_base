@@ -72,13 +72,47 @@ function Test_SplitStr()
 	-- 测试结果 {"1", "2", "3"}
 end
 
+function Test_CountTable()
+	-- Lib:CountTable(_G)
+	-- Lib:CountTable({_G}) -- 为什么两者不一致
+	local tbTest = {}
+	TestAssert(Lib:CountTable(tbTest) == 0)
+	
+	tbTest = {1}
+	TestAssert(Lib:CountTable(tbTest) == 1)
+
+	tbTest = {1, 2}
+	TestAssert(Lib:CountTable(tbTest) == 2)
+
+	tbTest[3] = {}	-- 空表不计入
+	TestAssert(Lib:CountTable(tbTest) == 2)
+
+	tbTest[3] = {1}
+	TestAssert(Lib:CountTable(tbTest) == 3)
+
+	tbTest[3] = {1, {2}}
+	TestAssert(Lib:CountTable(tbTest) == 4)
+
+	tbTest[3][3] = tbTest
+	TestAssert(Lib:CountTable(tbTest) == 4)
+
+	tbTest[3][4] = tbTest[3]
+	Lib:ShowTB(tbTest)
+	TestAssert(Lib:CountTable(tbTest) == 4)
+
+	tbTest[3][4] = tbTest[2]	-- 2 是一个数值
+	Lib:ShowTB(tbTest)
+	TestAssert(Lib:CountTable(tbTest) == 5)
+end
+
 function main()
 	print("--------------> Test Begin");
 
-	Test_TableEqual();
+	-- Test_TableEqual();
 
-	Test_SplitStr();
+	-- Test_SplitStr();
 
+	Test_CountTable();
 	print("--------------> Test Success End");
 end
 

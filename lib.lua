@@ -63,6 +63,8 @@ function Lib:ShowTB(tbVar, nCount)
 	-- 已经访问过的table表
 	local tbVisitTable = {};
 	
+	tbVisitTable[tbVar] = 1;
+
 	local function _ShowTBDetail(tbVar, szBlank, nCount)
 		if (not szBlank) then
 			szBlank = "";
@@ -128,6 +130,71 @@ function Lib:ShowTB(tbVar, nCount)
 	end
 	
 	_ShowTBDetail(tbVar or {}, nil, nCount);
+end
+
+function Lib:CountTable(tbVar)
+	local tbCountTable = {}
+	local nCount = 1;
+	local nMaxCount = 9999;
+	tbCountTable[tbVar] = 1
+
+	local function _CountTable(tbVar, nCount, name, bPrint) 
+		bPrint = bPrint or true
+		if nCount > 10 then
+			bPrint = false
+		end
+
+		local nElemCount = 0;
+
+		if nCount > nMaxCount then
+			print("Max Table Deep");
+			Lib:ShowTB(tbVar);
+			return
+		end
+
+		local tbType = {};
+		for k, v in pairs(tbVar) do
+			local nType = self:TypeId(type(v));
+			if (not tbType[nType]) then
+				tbType[nType] = {n = 0, name = type(v)};
+			end;
+			local tbTmp = tbType[nType];
+			tbTmp.n = tbTmp.n + 1;
+			tbTmp[tbTmp.n] = k;
+		end
+
+		for i = 1, 5 do
+			if tbType[i] then
+				nElemCount = nElemCount + tbType[i].n
+			end
+		end
+
+		if tbType[6] then
+			local nMax = tbType[6].n
+			for i = 1, nMax do
+				local key = tbType[6][i]
+				local value = tbVar[key]
+
+				if value == tbVar then	-- 等于自己
+				elseif tbCountTable[value] then -- 已经访问过的
+					-- nElemCount = nElemCount + 1
+					print("is visited")
+				else
+					tbCountTable[value] = 1
+					nElemCount = nElemCount + _CountTable(value or {}, nCount + 1, key)
+				end
+			end
+		end
+
+		if bPrint ~= false then
+			print("Count Table ", name, "the elem count is ", nElemCount, "the count is", nCount)
+		end
+		return nElemCount
+	end
+
+	local nElemCount = _CountTable(tbVar or {}, nCount)
+	print("ElemCount :", nElemCount)
+	return nElemCount;
 end
 
 function Lib:GetLocalOSPath(szClientPath)
